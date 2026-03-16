@@ -1,10 +1,23 @@
 # Git Commands Cheatsheet
 
-A quick reference of Git commands commonly used for staging, unstaging, and committing files.
+A quick reference of Git commands commonly used for staging, unstaging, committing files, checking configuration, and safely using GitHub on shared computers.
 
 ---
 
-## 1. Remove a File or Directory From Git Tracking (Keep Locally)
+# 1. Check Git Configuration
+
+```bash
+git config --list
+```
+
+**Explanation**
+
+* Displays all Git configuration settings currently applied
+* Useful for verifying Git identity, credential helpers, and repository configuration
+
+---
+
+# 2. Remove a File or Directory From Git Tracking (Keep Locally)
 
 ```bash
 git rm -r --cached <file_or_directory>
@@ -26,9 +39,7 @@ Used when a file or directory should be ignored by Git but already exists in the
 
 ---
 
-## 2. Restore a File to the Staging Area (Undo Unstage)
-
-If you removed a file from staging but haven't committed yet:
+# 3. Restore a File to the Staging Area (Undo Unstage)
 
 ```bash
 git restore --staged .gitignore
@@ -37,13 +48,11 @@ git restore --staged .gitignore
 **Explanation**
 
 * Moves the file **back into the staging area**
-* Useful when you accidentally unstaged something.
+* Useful when you accidentally unstaged something
 
 ---
 
-## 3. Stage Specific Files
-
-Add only selected files to the staging area:
+# 4. Stage Specific Files
 
 ```bash
 git add .gitignore sca_recommendations.xlsx
@@ -56,7 +65,7 @@ git add .gitignore sca_recommendations.xlsx
 
 ---
 
-## 4. Check What Will Be Committed
+# 5. Check What Will Be Committed
 
 ```bash
 git diff --cached
@@ -69,9 +78,7 @@ git diff --cached
 
 ---
 
-## 5. Unstage a File
-
-If a file was staged accidentally:
+# 6. Unstage a File
 
 ```bash
 git restore --staged services/vulnerability_lookup.py
@@ -84,7 +91,23 @@ git restore --staged services/vulnerability_lookup.py
 
 ---
 
-## Quick Workflow Example
+# Commit Title and Description from Command Line
+
+You can add both a **commit title** and **description** directly from the terminal.
+
+```bash
+git commit -m "Add SCA recommendations file" \
+           -m "Added sca_recommendations.xlsx containing vulnerability remediation mappings."
+```
+
+**Explanation**
+
+* First `-m` → Commit **title**
+* Second `-m` → Commit **description**
+
+---
+
+# Quick Workflow Example
 
 ```bash
 git add .gitignore sca_recommendations.xlsx
@@ -94,9 +117,25 @@ git commit -m "Update gitignore and add SCA recommendations"
 
 ---
 
-## Helpful Tip
+# Change Default Git Commit Editor
 
-Use `.gitignore` to prevent unwanted files from being tracked, such as:
+Git may open **Vim** when writing commit messages. You can switch to **Notepad**.
+
+```bash
+git config --global core.editor "notepad"
+```
+
+After this, running:
+
+```bash
+git commit
+```
+
+will open **Notepad** instead of Vim.
+
+---
+
+# Helpful `.gitignore` Example
 
 ```
 .env
@@ -104,6 +143,100 @@ __pycache__/
 *.pyc
 ```
 
-This keeps sensitive files and temporary files out of your repository.
+Used to prevent sensitive files and temporary files from being committed.
+
+---
+
+# Portable GitHub Workflow (Public / Shared Computer)
+
+Use this workflow when working on a **shared or public computer** to avoid saving credentials or identity.
+
+---
+
+## 1. Create a Temporary Workspace
+
+```bash
+mkdir temp-work
+cd temp-work
+```
+
+---
+
+## 2. Clone the Repository
+
+```bash
+git clone https://github.com/<username>/<repository>.git
+cd <repository>
+```
+
+---
+
+## 3. Configure Temporary Git Identity
+
+```bash
+git config user.name "Your Name"
+git config user.email "your_email@example.com"
+```
+
+* Identity is stored **only inside `.git/config`**
+* No global Git configuration is saved
+
+---
+
+## 4. Disable Credential Storage
+
+```bash
+git config credential.helper ""
+```
+
+* Prevents Git from storing credentials locally
+
+---
+
+## 5. Work Normally
+
+```bash
+git add .
+git commit -m "your commit message"
+git push
+```
+
+When prompted:
+
+* **Username:** your GitHub username
+* **Password:** GitHub Personal Access Token (PAT)
+
+---
+
+## 6. Clean Up After Finishing
+
+```bash
+cd ..
+rm -rf temp-work
+```
+
+Removes:
+
+* repository files
+* temporary Git configuration
+* commit history
+
+---
+
+## Optional Credential Cleanup
+
+```bash
+git credential-manager erase
+```
+
+---
+
+# Portable Workflow Summary
+
+* No global Git configuration
+* No stored credentials
+* Temporary identity only
+* Workspace deleted after use
+* Leaves minimal traces on shared computers
 
 ---
