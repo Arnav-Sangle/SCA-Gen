@@ -183,13 +183,58 @@ git config user.email "your_email@example.com"
 
 ---
 
-## 4. Disable Credential Storage
+## 4. Disable Credential Storage (Correct Method)
+
+Git may still use credential helpers like **manager-core**, especially on Windows.
+Simply setting an empty value is not always enough.
+
+### Step 1: Check existing credential helpers
+
+```bash
+git config --get-all credential.helper
+```
+
+---
+
+### Step 2: Remove all credential helpers (recommended)
+
+```bash
+git config --unset-all credential.helper
+```
+
+If needed, also remove global config:
+
+```bash
+git config --global --unset-all credential.helper
+```
+
+---
+
+### Step 3: Verify removal
+
+```bash
+git config --get-all credential.helper
+```
+
+If no output appears → credential storage is disabled ✅
+
+---
+
+### Optional (extra safety)
+
+Override any remaining helpers:
 
 ```bash
 git config credential.helper ""
 ```
 
-* Prevents Git from storing credentials locally
+---
+
+**Explanation**
+
+* Ensures Git does **not store credentials anywhere**
+* Prevents `manager-core` from automatically saving tokens
+* Important for shared/public systems
 
 ---
 
@@ -223,7 +268,7 @@ Removes:
 
 ---
 
-## Optional Credential Cleanup
+## Optional Credential Cleanup (Windows)
 
 ```bash
 git credential-manager erase
