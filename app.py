@@ -5,7 +5,7 @@ from utils.excel_parser import parse_excel
 from utils.excel_writer import append_recommendations
 
 from services.ai_ecosystem_classifier import detect_ecosystems_batch
-from services.vulnerability_lookup import get_vulnerabilities
+from services.vulnerability_aggregator import get_vulnerabilities
 from services.version_intelligence import get_all_versions
 from services.safe_version_finder import find_safe_versions, suggest_upgrade
 from services.ai_recommendation import generate_recommendation
